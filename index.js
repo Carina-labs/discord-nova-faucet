@@ -19,7 +19,7 @@ client.on(Events.MessageCreate, async (msg) => {
     const res = await sendToken(address);
     const cacheResult = add(address, Date.now());
     if (cacheResult) {
-      await msg.reply(`faucet executed send 1NOVA, receiver: ${address}, tx hash: ${res.transactionHash}`);
+      await msg.reply(`faucet executed send 10NOVA and 10ibc tokens, receiver: ${address}, tx hash: ${res.transactionHash}`);
     } else {
       await msg.reply(`you cannot get faucet until 24hours.`)
     }
