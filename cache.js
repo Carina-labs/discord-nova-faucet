@@ -1,6 +1,17 @@
 
 const cache = new Map();
-const CACHE_REFRESH_LIMIT_TIME = 600000;
+const CACHE_REFRESH_LIMIT_TIME = 60000 * 60 * 24; // 24H
+
+/*
+Cache structure(key-value store)
+--------------------------------
+  [key]    |       [value]
+--------------------------------
+{address1} | {time-milliseconds}
+{address2} | {time-milliseconds}
+{address3} | {time-milliseconds}
+--------------------------------
+ */
 
 module.exports = {
   add: function add(k, v) {
