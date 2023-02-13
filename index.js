@@ -25,7 +25,7 @@ client.on(Events.MessageCreate, async (msg) => {
       const cacheResult = add(address, Date.now());
       if (cacheResult) {
         console.log(`[SUCCESS] user faucet request, ${address}`);
-        await msg.reply(`faucet executed send 10NOVA and 10ibc tokens, receiver: ${address}, tx hash: ${res.transactionHash}`);
+        await msg.reply(`faucet executed send 10NOVA and 10ibc tokens, receiver: ${address}, tx: https://explorer.dev-supernova.xyz/supernova/transactions/${res.transactionHash}`);
       } else {
         console.log(`[FAILED] user faucet request, ${address}`);
         await msg.reply(`you cannot get faucet until 24hours.`)

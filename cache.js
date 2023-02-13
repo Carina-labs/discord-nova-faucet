@@ -14,6 +14,9 @@ Cache structure(key-value store)
  */
 
 module.exports = {
+  get: function get(k) {
+    return cache.get(k);
+  },
   add: function add(k, v) {
     if (!cache.has(k)) {
       const now = Date.now();
