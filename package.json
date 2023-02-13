@@ -12,6 +12,7 @@
   "dependencies": {
     "@cosmjs/proto-signing": "^0.29.5",
     "@cosmjs/stargate": "^0.29.5",
+    "async-mutex": "^0.4.0",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3"
   }
