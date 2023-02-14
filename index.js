@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { Client, Events, GatewayIntentBits, SlashCommandBuilder} = require('discord.js');
 const sendToken = require("./faucet");
-const { add } = require("./cache");
+const { add, canFaucet} = require("./cache");
 const { Mutex } = require("async-mutex");
 const client = new Client({ intents: [1, 512, 32768]});
 
@@ -21,14 +21,14 @@ client.on(Events.MessageCreate, async (msg) => {
     console.log(`[SCHEDULED] user faucet request, ${address}`);
     await mutex.runExclusive(async () => {
       console.log(`[PROCESSING] user faucet request, ${address}`);
-      const res = await sendToken(address);
-      const cacheResult = add(address, Date.now());
-      if (cacheResult) {
+      if (canFaucet(address)) {
+        const res = await sendToken(address);
         console.log(`[SUCCESS] user faucet request, ${address}`);
-        await msg.reply(`faucet executed send 10NOVA and 10ibc tokens, receiver: ${address}, tx: https://explorer.dev-supernova.xyz/supernova/transactions/${res.transactionHash}`);
+        await msg.reply(`:ballot_box_with_check: send 10NOVA and 10ibc tokens: <https://explorer.dev-supernova.xyz/supernova/transactions/${res.transactionHash}>`);
+        const cacheResult = add(address, Date.now());
       } else {
         console.log(`[FAILED] user faucet request, ${address}`);
-        await msg.reply(`you cannot get faucet until 24hours.`)
+        await msg.reply(`:x: you cannot get faucet until 24hours.`)
       }
     })
   }

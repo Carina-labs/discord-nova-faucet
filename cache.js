@@ -13,27 +13,32 @@ Cache structure(key-value store)
 --------------------------------
  */
 
+function validate(k) {
+  if (!cache.has(k)) {
+    return true;
+  }
+
+  const addedTime = cache.get(k);
+  const now = Date.now();
+  return now - addedTime > CACHE_REFRESH_LIMIT_TIME;
+}
+
 module.exports = {
   get: function get(k) {
     return cache.get(k);
   },
+  canFaucet: function canFaucet(k) {
+    return validate(k);
+  },
   add: function add(k, v) {
-    if (!cache.has(k)) {
+    if (validate(k)) {
       const now = Date.now();
       console.log(`item is not in cache, k: ${k}, v: ${v}, time: ${now}`);
       cache.set(k, now);
       return true;
     } else {
-      const addedTime = cache.get(k);
-      const now = Date.now();
-      if (now - addedTime > CACHE_REFRESH_LIMIT_TIME) {
-        console.log(`item is replaced, k: ${k}, v: ${v}, time: ${now}`);
-        cache.set(k, now);
-        return true;
-      } else {
-        console.log(`user cannot request faucet because of limit, k: ${k}, v: ${v}, time: ${now}`);
-        return false;
-      }
+      console.log(`user cannot request faucet because of limit, k: ${k}, v: ${v}, time: ${now}`);
+      return false;
     }
   }
 }
