@@ -47,12 +47,14 @@ export const processing = async (queue: Queue<Message<boolean>>, faucetAddress: 
         })
       })
 
-      const txResult = await sendTokens(msgSends)
-      const waitList = Promise.all(
-        parsedList.map((parsed) => new Promise((resolve) => {
-          parsed.discordMsg?.reply(`:ballot_box_with_check: send 10NOVA and 10ibc tokens: <https://explorer.dev-supernova.xyz/supernova/transactions/${txResult.transactionHash}>`)
-        }))
-      ).then((res) => console.log('finish...'))
+      if (msgSends.length > 0) {
+        const txResult = await sendTokens(msgSends)
+        Promise.all(
+          parsedList.map((parsed) => new Promise((resolve) => {
+            parsed.discordMsg?.reply(`:ballot_box_with_check: send 10NOVA and 10ibc tokens: <https://explorer.dev-supernova.xyz/supernova/transactions/${txResult.transactionHash}>`)
+          }))
+        ).then((res) => console.log('finish...'))
+      }
     }
 
     logger.log({
