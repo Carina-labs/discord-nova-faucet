@@ -5,13 +5,15 @@ import { handleMessage } from "./handler.js";
 import { sendTokens } from "./faucet.js";
 import { EncodeObject } from "@cosmjs/proto-signing";
 import { Message } from "discord.js";
+import {SyncedQueue} from "./queue.js";
 
-export const processing = async (queue: Queue<Message<boolean>>, faucetAddress: string) => {
+export const processing = async (queue: SyncedQueue<Message>, faucetAddress: string) => {
   while(true) {
-    const clonedQueue = new Queue<Message>(...queue.items())
+    const currentQueue = await queue.getAll()
+    const clonedQueue = new Queue<Message    >(...currentQueue)
     const queueSize = clonedQueue.size()
     for (let i = 0; i < queueSize; i++) {
-      queue.dequeue()
+      await queue.dequeue()
     }
     logger.log({
       level: 'info',

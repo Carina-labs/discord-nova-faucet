@@ -2,11 +2,10 @@ import express from 'express'
 import { config } from 'dotenv'
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Client, Events, Message } from "discord.js";
-import Queue from "@supercharge/queue-datastructure";
 import { processing } from "./process.js";
 import { logger } from "./logger.js";
 import { validateMsg } from "./handler.js";
-import {Mutex} from "async-mutex";
+import { SyncedQueue } from "./queue.js";
 
 config()
 const app = express()
@@ -15,7 +14,8 @@ const client = new Client({ intents: [1, 512, 32768] })
 app.listen(3000, async () => {
   const wallet = await DirectSecp256k1HdWallet.fromMnemonic(process.env.FAUCET_MNEMONIC || "", { prefix: 'nova' })
   const [faucet] = await wallet.getAccounts()
-  const queue = new Queue<Message>()
+  // const queue = new Queue<Message>()
+  const queue = new SyncedQueue<Message>()
 
   processing(queue, faucet.address).catch((err) => {
     logger.log({
