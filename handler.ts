@@ -40,7 +40,7 @@ export const validateMsg = (msg: Message) => {
     return { result: false, address: '' }
   }
 
-  if (address.length < 40 || address.length > 45) {
+  if (address.length != 43) {
     return { result: false, address: '' }
   }
 
